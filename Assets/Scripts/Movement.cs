@@ -23,9 +23,13 @@ public class Movement : MonoBehaviour {
     
     private void ProcessRotation() {
         if (Input.GetKey(KeyCode.D)) {
-            transform.Rotate(0, 0, -rotation * Time.deltaTime);
+            ApplyRotation(-rotation);
         } else if (Input.GetKey(KeyCode.A)) {
-            transform.Rotate(0, 0, rotation * Time.deltaTime);
+            ApplyRotation(rotation);
         }
+    }
+
+    private void ApplyRotation(float rotationAmount) {
+        transform.Rotate(0, 0, rotationAmount * Time.deltaTime);
     }
 }
