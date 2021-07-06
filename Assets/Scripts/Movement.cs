@@ -30,6 +30,8 @@ public class Movement : MonoBehaviour {
     }
 
     private void ApplyRotation(float rotationAmount) {
+        _rigidbody.freezeRotation = true; // take away control from the physics system temporarily
         transform.Rotate(0, 0, rotationAmount * Time.deltaTime);
+        _rigidbody.freezeRotation = false;
     }
 }
