@@ -3,6 +3,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour {
     private Rigidbody _rigidbody;
     private AudioSource _audioSource;
+    [SerializeField] private AudioClip engineThrustClip;
 
     [SerializeField] private float thrust = 20;
     [SerializeField] private float rotation = 20;
@@ -21,7 +22,7 @@ public class Movement : MonoBehaviour {
         if (Input.GetKey(KeyCode.Space)) {
             _rigidbody.AddRelativeForce(Vector3.up * (thrust * Time.deltaTime));
             if (!_audioSource.isPlaying) {
-                _audioSource.Play();
+                _audioSource.PlayOneShot(engineThrustClip);
             }
         } else {
             _audioSource.Stop();
