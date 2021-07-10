@@ -8,6 +8,9 @@ public class RocketCollision : MonoBehaviour {
     [SerializeField] private AudioClip explosionClip;
     [SerializeField] private AudioClip levelCompleteClip;
     
+    [SerializeField] private ParticleSystem explosionParticles;
+    [SerializeField] private ParticleSystem levelCompleteParticles;
+    
     private bool gameOver;
 
     private void Start() {
@@ -31,10 +34,10 @@ public class RocketCollision : MonoBehaviour {
 
     private void LevelComplete() {
         gameOver = true;
+        GetComponent<Movement>().DisableMovement();
         StopAudioAndPlayOneShot(levelCompleteClip);
         // todo display level complete screen
-        // todo flash particle effects
-        GetComponent<Movement>().enabled = false;
+        levelCompleteParticles.Play();
         Invoke("LoadNextLevel", levelEndDelay);
     }
 
@@ -49,10 +52,10 @@ public class RocketCollision : MonoBehaviour {
 
     private void ExplodeRocket() {
         gameOver = true;
+        GetComponent<Movement>().DisableMovement();
         StopAudioAndPlayOneShot(explosionClip);
         // todo display game over screen
-        // todo explode rocket
-        GetComponent<Movement>().enabled = false;
+        explosionParticles.Play();
         Invoke("RestartLevel", levelEndDelay);
     }
 
