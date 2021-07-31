@@ -3,6 +3,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour {
     private Rigidbody _rigidbody;
     private AudioSource _audioSource;
+    private LevelLoader _levelLoader;
     [SerializeField] private AudioClip engineThrustClip;
     [SerializeField] private ParticleSystem mainEngineParticles;
     [SerializeField] private ParticleSystem rightEngineParticles;
@@ -14,13 +15,24 @@ public class Movement : MonoBehaviour {
     void Start() {
         _rigidbody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
+        _levelLoader = FindObjectOfType<LevelLoader>();
     }
 
     void Update() {
         ProcessThrust();
         ProcessRotation();
+        ProcessDebugKeys();
     }
-    
+
+    private void ProcessDebugKeys() {
+        if (Input.GetKeyDown(KeyCode.L)) {
+            _levelLoader.LoadNextLevel();
+        }
+        if (Input.GetKeyDown(KeyCode.R)) {
+            _levelLoader.RestartLevel();
+        }
+    }
+
     private void ProcessThrust() {
         if (Input.GetKey(KeyCode.Space)) {
             _rigidbody.AddRelativeForce(Vector3.up * (thrust * Time.deltaTime));

@@ -1,8 +1,10 @@
+using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class RocketCollision : MonoBehaviour {
     private AudioSource _audioSource;
+    private LevelLoader _levelLoader;
     
     [SerializeField] private float levelEndDelay = 1f;
     [SerializeField] private AudioClip explosionClip;
@@ -12,13 +14,21 @@ public class RocketCollision : MonoBehaviour {
     [SerializeField] private ParticleSystem levelCompleteParticles;
     
     private bool gameOver;
+    private bool detectCollisions = true;
 
     private void Start() {
         _audioSource = GetComponent<AudioSource>();
+        _levelLoader = FindObjectOfType<LevelLoader>();
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.C)) {
+            detectCollisions = !detectCollisions;
+        }
     }
 
     private void OnCollisionEnter(Collision other) {
-        if (gameOver) return;
+        if (gameOver || !detectCollisions) return;
         switch (other.gameObject.tag) {
             case "Friendly":
                 // Do not harm player
@@ -42,13 +52,9 @@ public class RocketCollision : MonoBehaviour {
     }
 
     private void LoadNextLevel() {
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        int nextSceneIndex = currentSceneIndex + 1;
-        if (nextSceneIndex >= SceneManager.sceneCountInBuildSettings) {
-            nextSceneIndex = 0;
-        }
-        SceneManager.LoadScene(nextSceneIndex);
+        _levelLoader.LoadNextLevel();
     }
+
 
     private void ExplodeRocket() {
         gameOver = true;
@@ -60,7 +66,7 @@ public class RocketCollision : MonoBehaviour {
     }
 
     private void RestartLevel() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        _levelLoader.RestartLevel();
     }
 
     private void StopAudioAndPlayOneShot(AudioClip clip) {
